@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bisa Interview</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Question Display --->
+    <h1 class="text-center align-middle mt-3 mb-3" id="question">
+      &nbsp;
+    </h1>
+
+    <!-- Dissapointed Meme -->
+    <div id="meme" class="d-none mb-3">
+      <img class="img-fluid rounded" src="https://i.kym-cdn.com/photos/images/newsfeed/001/485/098/245.gif" />
+    </div>
+
+    <!-- Tips Display -->
+    <div id="protip" class="card">
+      <div class="card-body">
+        <h5 class="card-title">ProTip:</h5>
+        <p class="card-text" id="tip">&nbsp;</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <div class="container fixed-bottom mb-3">
+    <p class="text-center"><span class="mr-3"><kbd>space</kbd> untuk reset waktu</span><span><kbd>return</kbd> untuk lanjut</span></p> 
+    <button id="timer" onclick="reset_waktu()" type="button" class="btn btn-success btn-lg btn-block">Reset Waktu</button>
+    <button onclick="pertanyaan_berikut()" type="button" class="btn btn-primary btn-lg btn-block">Pertanyaan Berikutnya</button>
+  </div>
+
+
+  <!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://jamescun.github.io/iPG/data.js"></script>
+  <script type="text/javascript">
+    /* Questions */
+
+    function pertanyaan_berikut()
+    {
+
+      var question = q.shift();
+
+      if (question != 'done')
+      {
+        $('#question').html(question);
+
+        reset_waktu();
+        show_tip();
+      } else
+      {
+        $('#question').addClass('d-none');
+        $('#timer').addClass('d-none');
+        $('#meme').addClass('d-none');
+      }
+
+    }
+
+    /* Timer */
+
+    function tick()
+    {
+      $('#timer').removeClass('btn-warning');
+      $('#timer').removeClass('btn-danger');
+      
+      timer = timer - 1;
+      
+      $('#timer').html(timer + ' detik'); 
+      
+      if (timer < 10)
+      {
+        $('#timer').addClass('btn-warning');
+      }
+      if (timer < 5)
+      {
+        $('#timer').removeClass('btn-warning');
+        $('#timer').addClass('btn-danger');
+      }
+      if (timer <= 0)
+      {
+        $('#timer').addClass('d-none');
+        $('#meme').removeClass('d-none');
+        $('#protip').removeClass('d-none');
+      }
+      
+      setTimeout('tick();', 1000);
+    }
+
+    function reset_waktu()
+    {
+      $('#timer').removeClass('btn-warning');
+      $('#timer').removeClass('btn-danger');
+      $('#meme').addClass('d-none');
+      $('#protip').addClass('d-none');
+      $('#timer').removeClass('d-none');
+      
+      timer = 15;
+      
+      $('#timer').html('15 detik');
+    }
+
+    /* Tip Functions */
+
+    function show_tip()
+    {
+      var tip = tips.shift();
+      
+      $('#tip').html(tip);
+      
+      tips.push(tip);
+    }
+  </script>
+  <script type="text/javascript">
+    var timer = 15;
+
+    // Randomise
+    q.sort(function() {return 0.5 - Math.random()})
+    tips.sort(function() {return 0.5 - Math.random()})
+
+    // End Questions
+    q.push('done');
+
+    $(document).ready(function(){
+      pertanyaan_berikut();
+      tick();
+      show_tip();
+    });
+
+    $(document).keypress(function(e) {
+
+      switch (e.which) {
+        case 13:
+          // Pertanyaan Berikut - Return (13)
+          pertanyaan_berikut();
+          break;
+
+          case 32:
+        // Restart Waktu - Space (32)
+        reset_waktu();
+        break;
+      }
+    });
+  </script>
+</body>
+</html>
